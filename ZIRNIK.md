@@ -48,6 +48,19 @@ Kısıtlar: sunucuda 2 GB RAM var. **Ajanlar `gradlew` çalıştırmaz**, derlem
 - 2026-11-14: Yayın ajanı bitti. İmza anahtarı `/root/anahtarlar/zirnik-signing/` (yedek: `zirnik-signing-yedek/`), `build-apk.yml`, `release-notes.md` yazıldı, `.gitignore`'a `zirnik-password.txt` eklendi. Repo ajanı bitti: README, SURUMLER, CHANGELOG.
 - Yayın riskleri: `allowBackup=false` (telefon değişince veri gider, kullanıcıya söylenecek); Play için targetSdk 35, AAB, gizlilik politikası ve mağaza görselleri gerekir (APK dağıtımı için gerekmez); kamera `TakePicture` ile harici kamera uygulamasını açtığı için `CAMERA` izni **bildirilmez**.
 
+- 2026-11-14: Kod tamam ve derlendi: `Theme.kt` (tasarım belgesi renkleri, açık/koyu), `MainActivity.kt` (kalan kartı, boş durum, kamera/galeri fiş düğmeleri, fiş görüntüleme), `Entry.receipt`. `testDebugUnitTest` ve `assembleDebug` geçti. Repo public açıldı: github.com/lyldz/zirnik, secret'lar (`ZIRNIK_KEYSTORE_B64`, `ZIRNIK_KS_PASS`) eklendi, ilk push yapıldı (commit 9d1ba2d).
+- **Karar değişti:** Kullanıcı sonradan "ocr olmalı" dedi; önceki "OCR yok" kararı geçersiz. Kapsam (yalnızca tutar mı, tarih/mağaza da mı, PDF dahil mi) sorulacak.
+
+- 2026-11-14: CI başarılı (2 dk 47 sn), **v0.1.0 yayında**: https://github.com/lyldz/zirnik/releases/tag/v0.1.0 (Zirnik.apk). APK telefonda hiç denenmedi (logo görünümü, kamera/galeri, tema).
+- Oturum kaydedildi ve kapatıldı. Sonraki oturum: önce OCR kapsamı sorusunu sor (yalnızca tutar mı, tarih/mağaza da mı), önerim tutar + tarih; PDF içe aktarma ayrı iş.
+
+## Sonraki oturum için sıra
+1. Kullanıcıdan OCR kapsamını al, sonra ML Kit (çevrimdışı, ~4 MB) ile fiş fotoğrafından taslak doldur; kullanıcı düzeltip ekler.
+2. Telefonda dene (logo, tema, kamera/galeri, fiş görüntüleme), bulguları düzelt.
+3. Sürüm artır (`version.properties` + `.github/release-notes.md`), push.
+4. Sonra: PDF'ten içe aktarma (hangi banka/belge sorusu açık), kategori, yedekleme.
+5. Dikkat: main'e her push release üretir; yalnızca belge değişikliğinde commit mesajına `[skip ci]` ekle. Derlemede tek gradle, alt ajan gradlew çalıştırmaz.
+
 ## Bekleyen işler
 - [ ] İlk derleme ve testler (`:app:compileDebugKotlin`, `testDebugUnitTest`)
 - [ ] Yeni imza anahtarı (`/root/anahtarlar/zirnik-signing`), GitHub secret'ları `ZIRNIK_KEYSTORE_B64` ve `ZIRNIK_KS_PASS`
