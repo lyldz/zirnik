@@ -54,6 +54,10 @@ Kısıtlar: sunucuda 2 GB RAM var. **Ajanlar `gradlew` çalıştırmaz**, derlem
 - 2026-11-14: CI başarılı (2 dk 47 sn), **v0.1.0 yayında**: https://github.com/lyldz/zirnik/releases/tag/v0.1.0 (Zirnik.apk). APK telefonda hiç denenmedi (logo görünümü, kamera/galeri, tema).
 - Oturum kaydedildi ve kapatıldı. Sonraki oturum: önce OCR kapsamı sorusunu sor (yalnızca tutar mı, tarih/mağaza da mı), önerim tutar + tarih; PDF içe aktarma ayrı iş.
 
+- 2026-11-16: Kullanıcı OCR kapsamını seçti: **tutar, tarih ve mağaza adı**. `Parse.kt` (saf ayrıştırıcı: TOPLAM/GENEL TOPLAM/ÖDENECEK önceliği, ARA TOPLAM ve KDV hariç, tutar sonraki satıra kayabilir, gelecek ve geçersiz tarih reddedilir, mağaza ilk 6 satırdan), `Ocr.kt` (ML Kit Latin, çevrimdışı), `ParseTest.kt` (4 test). Forma yalnızca boş alanlar doldurulur; fiş tarihi varsa kayıt o güne yazılır. v0.2.0 derlendi, testler geçti.
+- APK boyutu: ML Kit ile 14,8 → 59 MB çıktı, x86 çıkarılınca 36 MB (debug). R8 kapalı; küçültme gerekirse ayrıca test et.
+- OCR gerçek fişlerle denenmedi, yalnızca uydurma metinle test edildi.
+
 ## Sonraki oturum için sıra
 1. Kullanıcıdan OCR kapsamını al, sonra ML Kit (çevrimdışı, ~4 MB) ile fiş fotoğrafından taslak doldur; kullanıcı düzeltip ekler.
 2. Telefonda dene (logo, tema, kamera/galeri, fiş görüntüleme), bulguları düzelt.

@@ -42,6 +42,11 @@ fun monthTitle(key: Int): String {
 
 fun dayText(millis: Long): String = SimpleDateFormat("d MMM", TR).format(millis)
 
+fun fullDayText(millis: Long): String = SimpleDateFormat("d MMM yyyy", TR).format(millis)
+
+/** 1250 -> "12,50" (forma geri yazmak için; parseKurus ile gidiş-dönüş). */
+fun plainKurus(kurus: Long): String = "${kurus / 100},${String.format(TR, "%02d", kurus % 100)}"
+
 /** (gelir, gider) toplamı, kuruş. */
 fun monthTotals(entries: List<Entry>, key: Int): Pair<Long, Long> {
     val m = entries.filter { monthKey(it.date) == key }

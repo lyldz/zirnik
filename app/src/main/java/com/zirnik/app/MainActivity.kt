@@ -167,9 +167,10 @@ fun ZirnikApp() {
 
     if (adding) AddDialog(
         onDismiss = { adding = false },
-        onAdd = { id, kurus, isIncome, note, receipt ->
-            update(entries + Entry(id, kurus, isIncome, note.trim(), System.currentTimeMillis(), receipt))
-            month = monthKey(System.currentTimeMillis()) // yeni kayıt hemen görünsün
+        onAdd = { id, kurus, isIncome, note, receipt, receiptDate ->
+            val date = if (receiptDate > 0) receiptDate else System.currentTimeMillis() // fişten okunan tarih varsa o
+            update(entries + Entry(id, kurus, isIncome, note.trim(), date, receipt))
+            month = monthKey(date) // yeni kayıt hemen görünsün
             adding = false
         }
     )
@@ -204,7 +205,7 @@ fun ZirnikApp() {
 }
 
 @Composable
-fun AddDialog(onDismiss: () -> Unit, onAdd: (Long, Long, Boolean, String, String) -> Unit) {
+fun AddDialog(onDismiss: () -> Unit, onAdd: (Long, Long, Boolean, String, String, Long) -> Unit) {
     val ctx = LocalContext.current
     val flow = LocalFlow.current
     // rememberSaveable: ekran dönse ya da kamera uygulaması açılırken etkinlik yeniden kurulsa da form kaybolmasın.
@@ -213,6 +214,8 @@ fun AddDialog(onDismiss: () -> Unit, onAdd: (Long, Long, Boolean, String, String
     var amount by rememberSaveable { mutableStateOf("") }
     var note by rememberSaveable { mutableStateOf("") }
     var receipt by rememberSaveable { mutableStateOf("") }
+    var receiptDate by rememberSaveable { mutableLongStateOf(0L) } // 0 = fişten okunmadı, kayıt bugüne yazılır
+    var reading by remember { mutableStateOf(false) }
     val kurus = parseKurus(amount)
     val focus = remember { FocusRequester() }
     LaunchedEffect(Unit) { focus.requestFocus() }
@@ -221,7 +224,21 @@ fun AddDialog(onDismiss: () -> Unit, onAdd: (Long, Long, Boolean, String, String
     fun store(uri: android.net.Uri?) {
         if (uri == null) return
         val name = saveReceipt(ctx, uri, id)
-        if (name == null) Toast.makeText(ctx, "Fotoğraf kaydedilemedi", Toast.LENGTH_SHORT).show() else receipt = name
+        if (name == null) { Toast.makeText(ctx, "Fotoğraf kaydedilemedi", Toast.LENGTH_SHORT).show(); return }
+        receipt = name
+        reading = true
+        readReceipt(ctx, name) { info ->
+            reading = false
+            if (info == null || (info.kurus == null && info.date == null && info.store == null)) {
+                Toast.makeText(ctx, "Fiş okunamadı, elle gir", Toast.LENGTH_SHORT).show()
+                return@readReceipt
+            }
+            // Kullanıcının yazdığını ezme; yalnızca boş alanları doldur.
+            if (amount.isEmpty()) info.kurus?.let { amount = plainKurus(it) }
+            if (note.isEmpty()) info.store?.let { note = it }
+            info.date?.let { receiptDate = it }
+            Toast.makeText(ctx, "Fişten okundu, kontrol et", Toast.LENGTH_SHORT).show()
+        }
     }
     val camera = rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { ok ->
         if (ok) store(cameraTarget(ctx).second)
@@ -267,12 +284,17 @@ fun AddDialog(onDismiss: () -> Unit, onAdd: (Long, Long, Boolean, String, String
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(Icons.Filled.Receipt, null, Modifier.size(18.dp)); Spacer(Modifier.width(6.dp))
                         Text("Fiş eklendi", Modifier.weight(1f))
-                        TextButton({ deleteReceipt(ctx, receipt); receipt = "" }) { Text("Kaldır") }
+                        TextButton({ deleteReceipt(ctx, receipt); receipt = ""; receiptDate = 0L }) { Text("Kaldır") }
                     }
+                    if (reading) Row(verticalAlignment = Alignment.CenterVertically) {
+                        CircularProgressIndicator(Modifier.size(16.dp), strokeWidth = 2.dp)
+                        Spacer(Modifier.width(8.dp)); Text("Fiş okunuyor…", fontSize = 14.sp)
+                    } else if (receiptDate > 0) Text("Fiş tarihi: ${fullDayText(receiptDate)}", fontSize = 14.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             }
         },
-        confirmButton = { TextButton({ kurus?.let { onAdd(id, it, income, note, receipt) } }, enabled = kurus != null) { Text("Ekle") } },
+        confirmButton = { TextButton({ kurus?.let { onAdd(id, it, income, note, receipt, receiptDate) } }, enabled = kurus != null) { Text("Ekle") } },
         dismissButton = { TextButton(::cancel) { Text("Vazgeç") } }
     )
 }

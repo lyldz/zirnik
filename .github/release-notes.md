@@ -1,9 +1,8 @@
-## Zırnık v0.1.0
+## Zırnık v0.2.0
 
-İlk sürüm. Basit gelir-gider takibi.
+Fişi okuyan sürüm.
 
-- Gelir ve gider ekleme (tutar, not)
-- Ay ay gezinme
-- Aylık kalanı görme
-- Fiş fotoğrafı ekleme: kamera veya galeri
-- Veriler yalnızca telefonda durur; internet ve hesap gerekmez
+- Fiş fotoğrafı çekince ya da galeriden seçince uygulama toplam tutarı, tarihi ve mağaza adını okuyup forma yazar. Hepsi taslaktır, kontrol edip düzeltebilirsin.
+- Fişten tarih okunursa kayıt o tarihe yazılır (örn. geçen haftaki alışveriş).
+- Okuma telefonda, internetsiz yapılır. Fotoğraf hiçbir yere gönderilmez.
+- Boyut büyüdü (okuma modeli uygulamanın içinde), yaklaşık 36 MB.
