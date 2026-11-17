@@ -1,5 +1,11 @@
 # Değişiklik günlüğü
 
+## v0.3.0 — 2026-11-17
+- Kredi kartı ekstresi PDF'inden içe aktarma: önizleme, işaretleme, yön değiştirme.
+- İade gelir olur, kart borcu ödemesi atlanır, mevcut kayıtla çakışan satır "zaten var" diye işaretlenmez.
+- Şifreli PDF için parola sorulur.
+- Düzeltme: büyük harfli açıklamalar "Netflıx" yerine "Netflix" olur (fiş mağaza adı için de).
+
 ## v0.2.0 — 2026-11-16
 - Fiş OCR'ı: fotoğraftan toplam tutar, tarih ve mağaza adı okunup forma taslak olarak yazılır (çevrimdışı, ML Kit).
 - Fişten tarih okunursa kayıt o tarihe yazılır.

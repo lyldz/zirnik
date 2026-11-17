@@ -58,6 +58,11 @@ Kısıtlar: sunucuda 2 GB RAM var. **Ajanlar `gradlew` çalıştırmaz**, derlem
 - APK boyutu: ML Kit ile 14,8 → 59 MB çıktı, x86 çıkarılınca 36 MB (debug). R8 kapalı; küçültme gerekirse ayrıca test et.
 - OCR gerçek fişlerle denenmedi, yalnızca uydurma metinle test edildi.
 
+- 2026-11-17: PDF ekstre içe aktarma (v0.3.0). Kullanıcı: ekstre **kredi kartı ekstresi**; banka adı ve örnek PDF verilmedi, bu yüzden ayrıştırıcı **genel** yazıldı. `Statement.kt` (satır başında tarih, ilk tutar, eksi başta/sonda = iade, eksi + ÖDEME/TAHSİLAT = kart borcu ödemesi → atlanır, `dupKey` ile çakışma), `Pdf.kt` (pdfbox-android, şifreli PDF için parola), `ImportDialog.kt` (seç → önizle → işaretle → ekle), `StatementTest.kt`. Ay çubuğunda yükleme düğmesi.
+- Hata düzeltildi: `titleCaseTr` büyük I'yı ı yapıyordu (NETFLIX → Netflıx); artık I/İ → i sonra başlık harfi. Kusur: "IŞIK" → "İşik".
+- APK 45 MB (pdfbox +9 MB). Derleme artık ~3-7 dk.
+- **Açık:** gerçek banka ekstresiyle denenmedi. Kullanıcıdan banka adı + örnek satırlar (ad/IBAN/kart no silinmiş) iste, `parseStatement`'ı ona göre ayarla. Bilinen sınırlar: alt satıra taşan açıklama, hesap (banka hesabı) ekstresi desteklenmez, taranmış PDF için OCR yedeği yok.
+
 ## Sonraki oturum için sıra
 1. Kullanıcıdan OCR kapsamını al, sonra ML Kit (çevrimdışı, ~4 MB) ile fiş fotoğrafından taslak doldur; kullanıcı düzeltip ekler.
 2. Telefonda dene (logo, tema, kamera/galeri, fiş görüntüleme), bulguları düzelt.

@@ -25,6 +25,7 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.PhotoLibrary
 import androidx.compose.material.icons.filled.Receipt
 import androidx.compose.material.icons.filled.Savings
+import androidx.compose.material.icons.filled.UploadFile
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -74,6 +75,7 @@ fun ZirnikApp() {
     var entries by remember { mutableStateOf(loadEntries(ctx)) }
     var month by rememberSaveable { mutableIntStateOf(monthKey(System.currentTimeMillis())) }
     var adding by rememberSaveable { mutableStateOf(false) }
+    var importing by rememberSaveable { mutableStateOf(false) }
     var viewing by rememberSaveable { mutableStateOf<String?>(null) }
     var deleting by remember { mutableStateOf<Entry?>(null) }
 
@@ -100,6 +102,7 @@ fun ZirnikApp() {
                 Text(monthTitle(month), Modifier.weight(1f).semantics { heading() }, fontSize = 20.sp,
                     fontWeight = FontWeight.Medium, textAlign = TextAlign.Center)
                 IconButton({ month++ }) { Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, "Sonraki ay") }
+                IconButton({ importing = true }) { Icon(Icons.Filled.UploadFile, "Ekstreden aktar") }
             }
 
             Card(
@@ -163,6 +166,13 @@ fun ZirnikApp() {
                 }
             }
         }
+    }
+
+    if (importing) ImportDialog(entries, onDismiss = { importing = false }) { list ->
+        update(entries + list)
+        list.maxOfOrNull { it.date }?.let { month = monthKey(it) } // eklenenler hemen görünsün
+        importing = false
+        Toast.makeText(ctx, "${list.size} kayıt eklendi", Toast.LENGTH_SHORT).show()
     }
 
     if (adding) AddDialog(

@@ -1,8 +1,11 @@
-## Zırnık v0.2.0
+## Zırnık v0.3.0
 
-Fişi okuyan sürüm.
+Kredi kartı ekstresini içe aktaran sürüm.
 
-- Fiş fotoğrafı çekince ya da galeriden seçince uygulama toplam tutarı, tarihi ve mağaza adını okuyup forma yazar. Hepsi taslaktır, kontrol edip düzeltebilirsin.
-- Fişten tarih okunursa kayıt o tarihe yazılır (örn. geçen haftaki alışveriş).
-- Okuma telefonda, internetsiz yapılır. Fotoğraf hiçbir yere gönderilmez.
-- Boyut büyüdü (okuma modeli uygulamanın içinde), yaklaşık 36 MB.
+- Ay çubuğundaki yükleme düğmesinden kredi kartı ekstresi PDF'i seç. Uygulama harcama satırlarını (tarih, açıklama, tutar) listeler, işaretlediklerini kayıt olarak ekler.
+- İade gelir olarak, kart borcu ödemesi ise atlanır (zaten alışverişte gider yazıldı). Yönü listede değiştirebilirsin.
+- Aynı gün ve aynı tutarda zaten kaydın varsa "zaten var" der ve işaretlemez; aynı ekstreyi iki kez yüklemek kayıt çoğaltmaz.
+- Şifreli PDF için parola sorar. Parola kaydedilmez.
+- Okuma telefonda yapılır, PDF hiçbir yere gönderilmez.
+- Not: ayrıştırıcı genel yazıldı, henüz gerçek bir bankanın ekstresiyle denenmedi. Yanlış okunan satır olursa bildir.
+- Boyut yaklaşık 45 MB.

@@ -56,6 +56,7 @@ dependencies {
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.activity:activity-compose:1.8.2")
     implementation("androidx.exifinterface:exifinterface:1.3.7")
+    implementation("com.tom-roush:pdfbox-android:2.0.27.0") // PDF ekstreden metin çıkarma, tamamen telefonda
     implementation("com.google.mlkit:text-recognition:16.0.1") // çevrimdışı OCR (Latin), model uygulamanın içinde
     implementation(platform("androidx.compose:compose-bom:2024.02.01"))
     implementation("androidx.compose.ui:ui")

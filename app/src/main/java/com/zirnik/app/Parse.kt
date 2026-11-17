@@ -9,7 +9,7 @@ data class ReceiptInfo(val kurus: Long?, val date: Long?, val store: String?)
 private val TR = Locale("tr", "TR")
 
 /** Anahtar kelime eşleşmesi için büyük harf + Türkçe harfleri sadeleştir. */
-private fun fold(s: String) = s.uppercase(TR)
+internal fun fold(s: String) = s.uppercase(TR)
     .replace('İ', 'I').replace('Ş', 'S').replace('Ğ', 'G').replace('Ü', 'U').replace('Ö', 'O').replace('Ç', 'C')
 
 private val AMOUNT = Regex("""(\d{1,3}(?:[.,]\d{3})+|\d+)[.,](\d{2})(?!\d)""")
@@ -60,8 +60,12 @@ private fun findStore(lines: List<String>): String? = lines.take(6).firstOrNull 
     val body = l.filterNot { it.isWhitespace() }
     body.count { it.isLetter() } >= 3 && body.count { it.isLetter() } >= body.length * 0.6 &&
         NOT_STORE.none { it in fold(l) }
-}?.lowercase(TR)?.split(' ')?.filter { it.isNotBlank() }
-    ?.joinToString(" ") { w -> w.replaceFirstChar { it.titlecase(TR) } }?.take(40)
+}?.let(::titleCaseTr)?.take(40)
+
+/** "MİGROS TİCARET" -> "Migros Ticaret" */
+internal fun titleCaseTr(s: String): String = s.replace('İ', 'i').replace('I', 'i') // I -> ı olmasın: NETFLIX -> Netflix
+    .lowercase(TR).split(' ').filter { it.isNotBlank() }
+    .joinToString(" ") { w -> w.replaceFirstChar { it.titlecase(TR) } }
 
 fun parseReceipt(text: String, now: Long = System.currentTimeMillis()): ReceiptInfo {
     val lines = text.lines().map { it.trim() }.filter { it.isNotEmpty() }
